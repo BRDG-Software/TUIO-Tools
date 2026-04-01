@@ -21,7 +21,7 @@ function getRandomRange(_min, _max){
 for (let i = 0; i < touchCount; i++) {
   // iterator serves as sessionId for each touch
   let random = getRandomRange(intervalMin, intervalMax);
-  console.log("Creating Touch with lifespan of " + random);
+  //console.log("Creating Touch with lifespan of " + random);
 
   let touch = new Touch(i, random );
   touches.push(touch);
