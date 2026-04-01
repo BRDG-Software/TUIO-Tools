@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUIO Sender</title>
+    <style>
+      :root {
+        --clickable-width: 1000px;
+        --clickable-height: 500px;
+      }
+      #clickableArea {
+        width: var(--clickable-width);
+        height: var(--clickable-height);
+      }
+    </style>
+</head>
+<body style="background-color:#000; width:100%; height:100%;">
+  <div style="
+    width:100%; height:100%; background-color:#000;
+  ">
+    <div style="position:absolute; left:20px; top:100px;">
+      <div id="clickableArea" 
+        style="
+          border: 1px solid white; background-color:#49a">
+      </div>
+    </div>
+    <h1 style="color:#fff">
+      Click anywhere inside the box to send a TUIO message
+    </h1>
+  </div>
+<script>
+    // adjust this to adjust clickable area (in pixels)
+  const width_height = [1000, 500];
+
+  const root = document.documentElement;
+  const adjWH  = [width_height[0]+"px",width_height[1]+"px"];
+  root.style.setProperty('--clickable-width', adjWH[0]);
+  root.style.setProperty('--clickable-height', adjWH[1]);
+
+  document.getElementById('clickableArea').addEventListener('click', function(event) {
+
+    const x = event.offsetX/width_height[0];
+    const y = event.offsetY/width_height[1];
+
+    console.log('Mouse clicked at X:', x, 'Y:', y);
+
+    // Send the coordinates to the Express server
+    fetch('/api/mouse-click', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ x: x, y: y }),
+    })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  });
+</script>
+</body>
+
+</html>
