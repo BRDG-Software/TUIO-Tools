@@ -40,11 +40,11 @@ let yNom = 0.0;
 let aliveMessage = function() {
   aliveTouches = new Array();
   let aliveMsg = new osc.Message('/tuio/2Dcur');
-  aliveMsg.append("alive")
+  aliveMsg.append({ type: 's', value: 'alive' });
   
   for (touch of touches){
     if ( touch.isAlive() ){
-      aliveMsg.append( touch.getSessionId() );
+      aliveMsg.append({ type: 'i', value: touch.getSessionId() });
       aliveTouches.push( touch.getSessionId() );
     }
   }
@@ -66,8 +66,8 @@ let setMessage = function() {
 
 let frameSequenceMessage = function() {
   let fseqMsg =  new osc.Message('/tuio/2Dcur')
-  fseqMsg.append("fseq");
-  fseqMsg.append(fSeq); //sessionId
+  fseqMsg.append({ type: 's', value: 'fseq' });
+  fseqMsg.append({ type: 'i', value: fSeq }); //frame sequence as int32
   client.send(fseqMsg, function(err){
     if (err) console.log(err);
   });
@@ -134,13 +134,13 @@ Touch.prototype.sendMessage = function(){
   if (this.alive){
 
     var setMsg =  new osc.Message('/tuio/2Dcur')
-    setMsg.append("set");
-    setMsg.append(this.sessionId); //sessionId
-    setMsg.append( this.location.x ); //x_pos
-    setMsg.append( this.location.y ); //y_pos
-    setMsg.append( this.velocity.x ); //x_vel
-    setMsg.append( this.velocity.y ); //y_vel
-    setMsg.append( this.acceleration ); //acceleration
+    setMsg.append({ type: 's', value: 'set' });
+    setMsg.append({ type: 'i', value: this.sessionId }); //sessionId as int32
+    setMsg.append({ type: 'f', value: this.location.x }); //x_pos as float
+    setMsg.append({ type: 'f', value: this.location.y }); //y_pos as float
+    setMsg.append({ type: 'f', value: this.velocity.x }); //x_vel as float
+    setMsg.append({ type: 'f', value: this.velocity.y }); //y_vel as float
+    setMsg.append({ type: 'f', value: this.acceleration }); //acceleration as float
     client.send(setMsg, function(err){
       if (err) console.log(err);
        console.log(setMsg);
